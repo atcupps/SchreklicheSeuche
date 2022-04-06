@@ -6,12 +6,13 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import Function.Button;
-import Function.Slider;
+import function.Button;
+import function.Slider;
 
 
 public class Intro extends BasicGameState 
@@ -41,13 +42,13 @@ public class Intro extends BasicGameState
 		// This code happens when you enter a game state for the *first time.*
 		gc.setShowFPS(true);
 		
-		hello = new Image("res/rectangle.png");
+		hello = new Image("res/Enter.png");
 		hello.setFilter(Image.FILTER_NEAREST);
 		
-		slider = new Slider(400f,400f,100f,100f, hello);
-		button = new Button(100f,100f,100f,100f, hello);
+//		slider = new Slider(400f,400f,100f,100f, hello);
+		button = new Button(400f,200f,400f,200f, hello);
 		
-		sliders.add(slider);
+//		sliders.add(slider);
 		buttons.add(button);
 	}
 
@@ -64,8 +65,8 @@ public class Intro extends BasicGameState
 		g.setColor(new Color(200,200,200));
 		
 		if (button.click()) {
-			//TEMPORARY
-			sbg.enterState(2);
+			g.drawRect(300, 300, 400, 400);
+			sbg.enterState(1);
 		}
 		
 	}

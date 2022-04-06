@@ -11,6 +11,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import function.Button;
+import function.Slider;
+
 
 
 public class Settings extends BasicGameState 
@@ -18,14 +21,19 @@ public class Settings extends BasicGameState
 {
 	int id;
 	
-	private Image button = null;
 
 	
+	Image hello = null;
 	
+	Button button;
+	
+	
+	public ArrayList<Button> buttons;
 	
 	Settings(int id) 
 	{
 		this.id = id;
+		buttons = new ArrayList<Button>();
 		
 		
 		
@@ -36,14 +44,28 @@ public class Settings extends BasicGameState
 		// This code happens when you enter a game state for the *first time.*
 		gc.setShowFPS(true);
 		
-		button = new Image("res/rectangle.png");
-		button.setFilter(Image.FILTER_NEAREST);
+		hello = new Image("res/launch.png");
+		hello.setFilter(Image.FILTER_NEAREST);
+			
+		button = new Button(400f,200f,400f,200f, hello);
 		
+		buttons.add(button);
+	
 	}
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException 
 	{
+		for(Button b : buttons) {
+			b.render(gc, g);
+		}
 		
+		
+		g.setColor(new Color(200,200,200));
+		
+		if (button.click()) {
+			g.drawRect(300, 300, 400, 400);
+			sbg.enterState(2);
+		}
 		
 	}
 	
@@ -51,7 +73,9 @@ public class Settings extends BasicGameState
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
 	{	
-		
+		for(Button b : buttons) {
+			b.update(gc);
+		}
 	}
 
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException 
@@ -64,7 +88,12 @@ public class Settings extends BasicGameState
 		
 	}
 	
-	
+	public void mousePressed(int buttonClick, int mx, int my)
+	{
+		for(Button b : buttons) {
+			b.mousePressed(buttonClick, mx, my);
+		}
+	}
 	
 
 	// Returns the ID code for this game state
