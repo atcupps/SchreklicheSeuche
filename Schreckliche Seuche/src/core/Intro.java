@@ -23,6 +23,7 @@ public class Intro extends BasicGameState
 	int id;
 	
 	Image hello = null;
+	Image slider1 = null;
 	
 	Button button;
 	Slider slider;
@@ -45,10 +46,13 @@ public class Intro extends BasicGameState
 		hello = new Image("res/Enter.png");
 		hello.setFilter(Image.FILTER_NEAREST);
 		
-//		slider = new Slider(400f,400f,100f,100f, hello);
+		slider1 = new Image("res/rectangle.png");
+		slider1.setFilter(Image.FILTER_NEAREST);
+		
+		slider = new Slider(700f,600f,100f,100f, hello, slider1);
 		button = new Button(400f,200f,400f,200f, hello);
 		
-//		sliders.add(slider);
+		sliders.add(slider);
 		buttons.add(button);
 	}
 

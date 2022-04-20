@@ -27,8 +27,9 @@ public class Slider
 	Image button = null;
 	boolean clicked;
 	int time;
+	Image back = null;
 	
-	public Slider(float x, float y, float width, float height, Image button)
+	public Slider(float x, float y, float width, float height, Image button, Image back)
 	{
 		
 		this.x = x;
@@ -38,6 +39,7 @@ public class Slider
 		this.button = button;
 		clicked = false;
 		time = 0;
+		this.back = back;
 		
 	}
 	
@@ -47,13 +49,15 @@ public class Slider
 		gc.setShowFPS(true);
 		
 		button.setFilter(Image.FILTER_NEAREST);
+		back.setFilter(Image.FILTER_NEAREST);
 		
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException 
 	{
-
+		back.draw(x-(button.getWidth()*4), y + (button.getHeight()), width*4, height/4);
 		button.draw(x, y, width, height);
+		
 		
 	}
 	
@@ -97,7 +101,7 @@ public class Slider
 				return true;	
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	public void mousePressed(int buttonClick, int mx, int my)
