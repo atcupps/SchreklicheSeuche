@@ -5,33 +5,210 @@ import org.newdawn.slick.Graphics;
 
 public class Person {
 
-	private Status status;
-	private Building curBuilding, home, workplace;
-	boolean isDay;
-	private int halfDaysInfected;
+	private float x, y, targetX, targetY, xDif, yDif;
 	
-	public Person(Building home, Building workplace) {
+	private Status status;
+	private Tile oldTile, curTile, home, workplace;
+	private int ticksInfected;
+
+	private boolean isWorking;
+	private int timeGoWork, timeGoHome;
+	
+	public Person(Tile home) {
 		status = Status.SUSCEPTIBLE;
-		isDay = true;
 		this.home = home;
-		this.workplace = workplace;
 		
-		halfDaysInfected = 0;
+		oldTile = Simulation.getTile(home.getPosX() - 1, home.getPosY());
+		curTile = home;
+		
+		timeGoWork = 8 + (int)(Math.random() * 4) - 2;
+		timeGoHome = timeGoWork + 10;
+		
+		x = oldTile.getCenterX();
+		y = oldTile.getCenterY();
+		int maxPeople = curTile.getMaxPeople();
+		targetX = curTile.getX() + (curTile.getW() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
+		targetY = curTile.getY() + (curTile.getH() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
+		xDif = targetX - x;
+		yDif = targetY - y;
+		
+		
+		
+		ticksInfected = 0;
 	}
 	
 	public void update() {
 		if (status.equals(Status.INFECTIOUS) || status.equals(Status.SYMPTOMATIC)) {
-			halfDaysInfected++;
+			ticksInfected++;
 		}
-		if (halfDaysInfected > Simulation.INCUBATION * 2) {
+		if (status.equals(Status.SYMPTOMATIC) && Math.random() < Simulation.D_PER_I / (Simulation.PERIOD - Simulation.INCUBATION) / 24) {
+			status = Status.DEAD;
+			curTile.removePerson(this);
+		}
+		if (!status.equals(Status.DEAD) && ticksInfected > Simulation.INCUBATION * 24) {
 			status = Status.SYMPTOMATIC;
 		}
-		if (halfDaysInfected > Simulation.PERIOD * 2) {
+		if (!status.equals(Status.DEAD) && ticksInfected > Simulation.PERIOD * 24) {
 			status = Status.RECOVERED;
+		}
+		if (workplace == null) {
+			workplace = home;
 		}
 	}
 	
-	public void drawPerson(Graphics g, float x, float y) {
+	public void updatePosition() {
+		if (!status.equals(Status.DEAD)) {
+			if (curTile != oldTile) {
+				if (!curTile.getTileType().equals(Tile.TileType.STREET)) {
+					x += xDif / (float)(Simulation.TICK / 4);
+					y += yDif / (float)(Simulation.TICK / 4);
+				} else {
+					if (!oldTile.getTileType().equals(Tile.TileType.STREET)) {
+						x += xDif / (float)(Simulation.TICK / 4);
+						y += yDif / (float)(Simulation.TICK / 4);
+					} else {
+						if (curTile.getCenterX() > x) {
+							x += 100f / (float)(Simulation.TICK / 4);
+						} else
+						if (curTile.getCenterX() < x) {
+							x -= 100f / (float)(Simulation.TICK / 4);
+						} else
+						if (curTile.getCenterY() > y) {
+							y += 100f / (float)(Simulation.TICK / 4);
+						} else
+						if (curTile.getCenterY() < y) {
+							y -= 100f / (float)(Simulation.TICK / 4);
+						}
+						if (Math.abs(curTile.getCenterX() - x) < 1f) {
+							x = curTile.getCenterX();
+						}
+						if (Math.abs(curTile.getCenterY() - y) < 1f) {
+							y = curTile.getCenterY();
+						}
+					}
+				}
+			}
+		} else {
+			if (y > 270) y--;
+			if (y < 270) y = 270;
+		}
+	}
+	
+	public void setNewTile() {
+		if (Simulation.getTime() / Simulation.TICK < timeGoWork || Simulation.getTime() / Simulation.TICK > timeGoHome) {
+			if (curTile.equals(home)) {
+				oldTile = curTile;
+			}
+			else if ((Math.abs(home.getPosX() - curTile.getPosX()) < 1 && home.getPosY() == curTile.getPosY()) || (Math.abs(home.getPosY() - curTile.getPosY()) < 1 && home.getPosX() == curTile.getPosX())) {
+				oldTile = curTile;
+				curTile = home;
+			} else {
+				if (Math.abs(curTile.getPosX() - home.getPosX()) > Math.abs(curTile.getPosY() - home.getPosY())) {
+					if (curTile.getPosX() < home.getPosX()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX() + 1, curTile.getPosY());
+					}
+					else if (curTile.getPosX() > home.getPosX()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX() - 1, curTile.getPosY());
+					}
+				} else {
+					if (curTile.getPosY() < home.getPosY()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX(), curTile.getPosY() + 1);
+					}
+					else if (curTile.getPosY() > home.getPosY()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX(), curTile.getPosY() - 1);
+					}
+				}
+			}
+		} else {
+			if (curTile.equals(workplace)) {
+				oldTile = curTile;
+			}
+			else if ((Math.abs(workplace.getPosX() - curTile.getPosX()) < 1 && workplace.getPosY() == curTile.getPosY()) || (Math.abs(workplace.getPosY() - curTile.getPosY()) < 1 && workplace.getPosX() == curTile.getPosX())) {
+				oldTile = curTile;
+				curTile = workplace;
+			} 
+			else {
+				if (Math.abs(curTile.getPosX() - workplace.getPosX()) > Math.abs(curTile.getPosY() - workplace.getPosY())) {
+					if (curTile.getPosX() < workplace.getPosX()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX() + 1, curTile.getPosY());
+					}
+					else if (curTile.getPosX() > workplace.getPosX()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX() - 1, curTile.getPosY());
+					}
+				} else {
+					if (curTile.getPosY() < workplace.getPosY()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX(), curTile.getPosY() + 1);
+					}
+					else if (curTile.getPosY() > workplace.getPosY()) {
+						oldTile = curTile;
+						curTile = Simulation.getTile(curTile.getPosX(), curTile.getPosY() - 1);
+					}
+				}
+			}
+		}
+		if (!curTile.equals(oldTile)) {
+			if (!curTile.getType().equals(Tile.TileType.STREET)) {
+				if (!(curTile.equals(home) || curTile.equals(workplace))) {
+					if (Math.random() * 10 > 5) {
+						if (oldTile.getPosX() - 1 >= 0 && Simulation.getTile(oldTile.getPosX() - 1, oldTile.getPosY()).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX() - 1, oldTile.getPosY());
+						}
+						else if (oldTile.getPosY() - 1 >= 0 && Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() - 1).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() - 1);
+						}
+						else if (oldTile.getPosX() + 1 < Simulation.tileX && Simulation.getTile(oldTile.getPosX() + 1, oldTile.getPosY()).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX() + 1, oldTile.getPosY());
+						}
+						else if (oldTile.getPosY() + 1 < Simulation.tileY && Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() + 1).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() + 1);
+						}
+					} else {
+						if (oldTile.getPosX() + 1 < Simulation.tileX && Simulation.getTile(oldTile.getPosX() + 1, oldTile.getPosY()).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX() + 1, oldTile.getPosY());
+						}
+						else if (oldTile.getPosY() + 1 < Simulation.tileY && Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() + 1).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() + 1);
+						}
+						else if (oldTile.getPosX() - 1 >= 0 && Simulation.getTile(oldTile.getPosX() - 1, oldTile.getPosY()).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX() - 1, oldTile.getPosY());
+						}
+						else if (oldTile.getPosY() - 1 >= 0 && Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() - 1).getTileType().equals(Tile.TileType.STREET)) {
+							curTile = Simulation.getTile(oldTile.getPosX(), oldTile.getPosY() - 1);
+						}
+					}
+				}
+			}
+		}
+		
+		
+		
+		oldTile.removePerson(this);
+		curTile.addPerson(this);
+		
+		if (!curTile.getTileType().equals(Tile.TileType.STREET)) {
+			int maxPeople = curTile.getMaxPeople();
+			targetX = curTile.getX() + (curTile.getW() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
+			targetY = curTile.getY() + (curTile.getH() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
+			xDif = targetX - x;
+			yDif = targetY - y;
+		} else {
+			if (!oldTile.getTileType().equals(Tile.TileType.STREET)) {
+				targetX = curTile.getCenterX();
+				targetY = curTile.getCenterY();
+				xDif = targetX - x;
+				yDif = targetY - y;
+			}
+		}
+	}
+	
+	public void drawPerson(Graphics g) {
 		switch(status) {
 		case SUSCEPTIBLE:
 			g.setColor(new Color(255,255,255));
@@ -52,18 +229,11 @@ public class Person {
 	}
 	
 	public void render(Graphics g) {
-//		if (status.equals(Status.SUSCEPTIBLE)) {
-//			g.setColor(new Color(255,255,255,40));
-//			g.fillOval(home.getCenter()[0] - 15, home.getCenter()[1] - 15, 30, 30);
-//		} else
-//		if (status.equals(Status.INFECTIOUS)) {
-//			g.setColor(new Color(100,100,0,40));
-//			g.fillOval(home.getCenter()[0] - 15, home.getCenter()[1] - 15, 30, 30);
-//		} else
-//		if (status.equals(Status.SYMPTOMATIC)) {
-//			g.setColor(new Color(255,0,0,40));
-//			g.fillOval(home.getCenter()[0] - 15, home.getCenter()[1] - 15, 30, 30);
-//		}
+
+	}
+	
+	public void addWorkplace(Tile workplace) {
+		this.workplace = workplace;
 	}
 	
 	public void infect() {
@@ -78,7 +248,9 @@ public class Person {
 		RECOVERED
 	}
 	
-	public Status getStatus() {
-		return status;
-	}
+	public Tile getHome() { return home; }
+	public Tile getWorkplace() { return workplace; }
+	public Tile getTile() { return curTile; }
+	public Status getStatus() { return status; }
+	public boolean hasWorkplace() { return ((workplace == null) ? false : true); }
 }
