@@ -25,8 +25,11 @@ public class Intro extends BasicGameState
 	Image hello = null;
 	Image slider1 = null;
 	
+
+	
 	Button button;
 	Slider slider;
+	Slider slider2;
 	
 	public ArrayList<Button> buttons;
 	public ArrayList<Slider> sliders;
@@ -49,10 +52,12 @@ public class Intro extends BasicGameState
 		slider1 = new Image("res/rectangle.png");
 		slider1.setFilter(Image.FILTER_NEAREST);
 		
-		slider = new Slider(700f,600f,100f,100f, hello, slider1);
+		slider = new Slider(700f,600f,100f,15f, hello, slider1, 15);
+		slider2 = new Slider(200f,500f,300f,20f, hello, slider1, 50);
 		button = new Button(400f,200f,400f,200f, hello);
 		
 		sliders.add(slider);
+		sliders.add(slider2);
 		buttons.add(button);
 	}
 
