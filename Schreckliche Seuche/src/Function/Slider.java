@@ -1,4 +1,4 @@
-package function;
+package Function;
 
 import java.util.ArrayList;
 
@@ -131,9 +131,6 @@ public class Slider
 		
 		
 		if (pressed && Mouse.getX() >= x  && Mouse.getX() <= x + width) {
-
-			
-			System.out.println(altX);
 			altX = Math.abs(x-Mouse.getX()) - width/16;
 
 		}

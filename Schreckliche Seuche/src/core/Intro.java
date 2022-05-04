@@ -11,8 +11,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import function.Button;
-import function.Slider;
+import Function.Button;
+import Function.Slider;
 
 
 public class Intro extends BasicGameState 

@@ -26,7 +26,7 @@ public class Person {
 		
 		x = oldTile.getCenterX();
 		y = oldTile.getCenterY();
-		int maxPeople = curTile.getMaxPeople();
+		float maxPeople = curTile.getMaxPeople();
 		targetX = curTile.getX() + (curTile.getW() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
 		targetY = curTile.getY() + (curTile.getH() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
 		xDif = targetX - x;
@@ -193,7 +193,7 @@ public class Person {
 		curTile.addPerson(this);
 		
 		if (!curTile.getTileType().equals(Tile.TileType.STREET)) {
-			int maxPeople = curTile.getMaxPeople();
+			float maxPeople = curTile.getMaxPeople();
 			targetX = curTile.getX() + (curTile.getW() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
 			targetY = curTile.getY() + (curTile.getH() * (curTile.getCurPeople().size() % (maxPeople + 1))) / (maxPeople + 1);
 			xDif = targetX - x;
@@ -214,7 +214,7 @@ public class Person {
 			g.setColor(new Color(255,255,255));
 			break;
 		case INFECTIOUS:
-			g.setColor(new Color(180,180,0));
+			g.setColor(new Color(235, 213, 52));
 			break;
 		case SYMPTOMATIC:
 			g.setColor(new Color(255,0,0));

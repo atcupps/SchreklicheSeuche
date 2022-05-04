@@ -22,7 +22,8 @@ public class Engine extends StateBasedGame
     public static final int settingScreen = 1;
     public static final int simulation = 2;
 
-
+    public static float popDensity = 3;
+    public static float rNaught = 1.0f;
 
 	public Engine(String name) 
 	{
@@ -31,7 +32,7 @@ public class Engine extends StateBasedGame
 		
 		this.addState(new Intro(introScreen));
 		this.addState(new Settings(settingScreen));
-		this.addState(new Simulation(simulation));
+//		this.addState(new Simulation(simulation));
 		
 		
 		
@@ -42,7 +43,7 @@ public class Engine extends StateBasedGame
 		
 		this.getState(introScreen).init(gc, this);
 		this.getState(settingScreen).init(gc, this);
-		this.getState(simulation).init(gc,  this);
+//		this.getState(simulation).init(gc,  this);
 		
 	}
 

@@ -11,8 +11,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import function.Button;
-import function.Slider;
+import Function.Button;
+import Function.Slider;
 
 
 
@@ -33,8 +33,7 @@ public class Settings extends BasicGameState
 	Slider popDensity;
 	Slider rNaught;
 	
-	public static float rNaughtF;
-	public static int popDensityF;
+	public static float rNaughtF, popDensityF;
 	
 	
 	public ArrayList<Slider> sliders;
@@ -78,7 +77,7 @@ public class Settings extends BasicGameState
 		sliders.add(popDensity);
 		sliders.add(rNaught);
 		
-		popDensityF = 1;
+		popDensityF = 3;
 		rNaughtF = 0;
 		
 	}
@@ -97,7 +96,8 @@ public class Settings extends BasicGameState
 		g.setColor(new Color(200,200,200));
 		
 		if (button.click()) {
-			g.drawRect(300, 300, 100, 100);
+			sbg.addState(new Simulation(2));
+			sbg.getState(2).init(gc, sbg);
 			sbg.enterState(2);
 		}
 		g.setColor(new Color(0,0,0));
@@ -117,9 +117,8 @@ public class Settings extends BasicGameState
 			b.update(gc);
 		}
 		
-		popDensityF = (int) popDensity.categorySelected();
+		popDensityF = popDensity.categorySelected();
 		rNaughtF = rNaught.categorySelected()/5;
-		System.out.println(rNaughtF);
 	}
 
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException 
@@ -138,6 +137,9 @@ public class Settings extends BasicGameState
 			b.mousePressed(buttonClick, mx, my);
 		}
 	}
+	
+	public static float getR0() { return rNaughtF; }
+	public static float getPopDensity() { return popDensityF; }
 	
 
 	// Returns the ID code for this game state

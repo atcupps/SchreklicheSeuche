@@ -12,7 +12,7 @@ public class Tile {
 	private TileType t;
 	private float x, y, w, h;
 	private int posX, posY;
-	private int maxPeople;
+	private float maxPeople;
 	
 	private ArrayList<Person> peopleInTile;
 	private ArrayList<Person> workers;
@@ -32,7 +32,7 @@ public class Tile {
 		switch (this.t) {
 		case HOME: 
 			residents = new ArrayList<Person>();
-			maxPeople = Simulation.MAX_RESIDENTS;
+			maxPeople = Simulation.POP_DENSITY;
 			break;
 		case WORKPLACE: 
 			workers = new ArrayList<Person>();
@@ -141,7 +141,7 @@ public class Tile {
 	}
 	
 	public TileType getType() { return t; }
-	public int getMaxPeople() { return maxPeople; }
+	public float getMaxPeople() { return maxPeople; }
 	public TileType getTileType() { return t; }
 	public ArrayList<Person> getResidents() { return residents; }
 	public ArrayList<Person> getWorkers() { return workers; }

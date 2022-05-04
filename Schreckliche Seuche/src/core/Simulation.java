@@ -18,15 +18,14 @@ public class Simulation extends BasicGameState
 {
 	int id;
 	
-	public static int time;
+	public static int time, dataScaler;
 	public static float days;
 	public static boolean isDay;
 	
 	public static float R_0, PERIOD, I_PER_C, INCUBATION, D_PER_I;
-	
-	public static final int MAX_RESIDENTS = 5;
+	public static final float POP_DENSITY = Settings.popDensityF;
 	public static final int MAX_WORKERS = 10;
-	public static final int TICK = 50;
+	public static final int TICK = 60;
 	public static final int tileX = 13;
 	public static final int tileY = 7;
 	
@@ -48,10 +47,7 @@ public class Simulation extends BasicGameState
 	{
 		// This code happens when you enter a game state for the *first time.*
 		gc.setShowFPS(true);
-		
-		
-		///TEMPOERARRY:
-		R_0 = 2.0f;
+		R_0 = 0;
 		PERIOD = 10;
 		I_PER_C = R_0 / PERIOD / 7;
 		D_PER_I = 0.2f;
@@ -75,7 +71,7 @@ public class Simulation extends BasicGameState
 				if (i % 2 == 0 || b % 2 == 0) {
 					t = Tile.TileType.STREET;
 				} else {
-					if (Math.random() * 10 > 6.5) {
+					if (Math.random() * 10 > 7) {
 						t = Tile.TileType.WORKPLACE;
 					} else {
 						t = Tile.TileType.HOME;
@@ -131,9 +127,15 @@ public class Simulation extends BasicGameState
 		currentlyInfected = new ArrayList<Integer>();
 		totalDeaths = new ArrayList<Integer>();
 		
+		totalInfected.add(0);
+		currentlyInfected.add(0);
+		totalDeaths.add(0);
+		
 		totalInfected.add(1);
 		currentlyInfected.add(1);
 		totalDeaths.add(0);
+		
+		dataScaler = 1;
 	}
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException 
@@ -141,10 +143,10 @@ public class Simulation extends BasicGameState
 		g.setBackground(new Color(45,45,45));
 				
 		g.setColor(new Color(255,255,255));
-		g.drawString("Day " + days + " at " + (time / (TICK)) + ":00 " + "    R_naught: " + R_0 + "    Incubation time: " + INCUBATION + " days    Infection period: " + PERIOD, 30, 90);
+		g.drawString("Day " + days + " at " + (time / (TICK)) + ":00 " + "    R_naught: " + R_0 + "    Incubation time: " + INCUBATION + " days    Infection period: " + PERIOD + "    Death rate: " + D_PER_I, 30, 90);
 		g.setColor(new Color(255,255,255));
 		g.drawString("Susceptible: Not yet infected by disease", 30, 105);
-		g.setColor(new Color(180,180,0));
+		g.setColor(new Color(235, 213, 52));
 		g.drawString("Infectious Asymptomatic: No current symptoms, spreads disease at a lower rate", 30, 120);
 		g.setColor(new Color(255,0,0));
 		g.drawString("Infectious Symptomatic: Clinical symptoms, spreads disease at a higher rate", 30, 135);
@@ -165,8 +167,32 @@ public class Simulation extends BasicGameState
 		
 
 		g.setColor(new Color(238, 255, 130));
+		String totalInf = "Total Number of Infections";
+		g.drawString(totalInf, 60 + ((600 - 60) / 2) - (10 * (totalInf.length() / 2)), 200);
 		g.drawLine(60, 200, 60, 480);
-		g.drawLine(60, 480, 360, 480);
+		g.drawLine(60, 480, 600, 480);
+		
+		for (int i = 0; i < totalInfected.size(); i ++) {
+			g.fillOval(60 + ((540 * i) / totalInfected.size()) - 3, 480 - (260 / people.size()) * totalInfected.get(i) - 3, 6, 6);
+		}
+		
+		g.setColor(new Color(255, 130, 130));
+		String curInf = "Current Number of Active Infections";
+		g.drawString(curInf, 60 + ((600 - 60) / 2) - (10 * (curInf.length() / 2)), 490);
+		g.drawLine(60, 505, 60, 765);
+		g.drawLine(60, 765, 600, 765);
+		for (int i = 0; i < currentlyInfected.size(); i ++) {
+			g.fillOval(60 + ((540 * i) / currentlyInfected.size()) - 3, 765 - (260 / people.size()) * currentlyInfected.get(i) - 3, 6, 6);
+		}
+		
+		g.setColor(new Color(174, 130, 255));
+		String death = "Total Number of Deaths";
+		g.drawString(death, 60 + ((600 - 60) / 2) - (10 * (death.length() / 2)), 790);
+		g.drawLine(60, 790, 60, 1070);
+		g.drawLine(60, 1070, 600, 1070);
+		for (int i = 0; i < totalDeaths.size(); i++) {
+			g.fillOval(60 + ((540 * i) / totalDeaths.size()) - 3, 1070 - (260 / people.size()) * totalDeaths.get(i) - 3, 6, 6);
+		}
 		
 	}
 	
@@ -181,6 +207,13 @@ public class Simulation extends BasicGameState
 //				p.update();
 //			}
 //		}
+		
+		R_0 = Settings.rNaughtF;
+		PERIOD = 10;
+		I_PER_C = R_0 / PERIOD / 7;
+		D_PER_I = 0.2f;
+		INCUBATION = 3;
+		
 		
 		time++;
 		for (Person p : people) {
@@ -204,10 +237,6 @@ public class Simulation extends BasicGameState
 					p.update();
 				}
 			}
-		}
-		if (time % (24 * TICK) == 0) {
-			days++;
-			time = 0;
 			int totalInf = 0;
 			int curInf = 0;
 			int totalDead = 0;
@@ -219,6 +248,11 @@ public class Simulation extends BasicGameState
 			totalInfected.add(totalInf);
 			currentlyInfected.add(curInf);
 			totalDeaths.add(totalDead);
+		}
+		
+		if (time % (24 * TICK) == 0) {
+			days++;
+			time = 0;
 		}
 		
 //		if (Simulation.time / 1200 % 2 == 0) {
