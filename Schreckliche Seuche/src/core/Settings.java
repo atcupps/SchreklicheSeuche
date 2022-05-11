@@ -11,8 +11,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import Function.Button;
-import Function.Slider;
+import function.Button;
+import function.Slider;
 
 
 
@@ -32,8 +32,9 @@ public class Settings extends BasicGameState
 	
 	Slider popDensity;
 	Slider rNaught;
+	Slider time;
 	
-	public static float rNaughtF, popDensityF;
+	public static float rNaughtF, popDensityF, timeF;
 	
 	
 	public ArrayList<Slider> sliders;
@@ -73,12 +74,16 @@ public class Settings extends BasicGameState
 		
 		rNaught = new Slider(1150f,800f,700f,15f, sliderClick, sliderBack, 53);
 		
+		time = new Slider(600f, 600f, 700f, 15f, sliderClick, sliderBack, 43);
+		
 		buttons.add(button);
 		sliders.add(popDensity);
 		sliders.add(rNaught);
+		sliders.add(time);
 		
 		popDensityF = 3;
 		rNaughtF = 0;
+		timeF = 5;
 		
 	}
 
@@ -103,7 +108,7 @@ public class Settings extends BasicGameState
 		g.setColor(new Color(0,0,0));
 		g.drawString("" + popDensityF, 175, 950);
 		g.drawString("" + rNaughtF, 1175, 950);
-		
+		g.drawString("" + timeF, 650, 650);
 	}
 	
 
@@ -119,6 +124,7 @@ public class Settings extends BasicGameState
 		
 		popDensityF = popDensity.categorySelected();
 		rNaughtF = rNaught.categorySelected()/5;
+		timeF = time.categorySelected() + 5;
 	}
 
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException 
