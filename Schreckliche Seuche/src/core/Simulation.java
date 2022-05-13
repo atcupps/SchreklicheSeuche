@@ -25,9 +25,16 @@ public class Simulation extends BasicGameState
 	public static float R_0, PERIOD, I_PER_C, INCUBATION, D_PER_I;
 	public static final float POP_DENSITY = Settings.popDensityF;
 	public static final int MAX_WORKERS = 10;
-	public static final int TICK = 60;
-	public static final int tileX = 13;
-	public static final int tileY = 7;
+	public static final int TICK = 20;
+	public static final int cityX = 650;
+	public static final int cityY = 240;
+	public static final int cityW = 1200;
+	public static final int cityH = 600;
+	public static final int numTiles = 2000;
+	public static final int tileY = (int)(Math.sqrt(numTiles / 2));
+	public static final int tileX = 2 * tileY;
+	public static final float tileW = cityW / tileX;
+	public static final float tileH = cityH / tileY;
 	
 	private MapType mapType;
 	private static Tile[][] tiles;
@@ -77,7 +84,7 @@ public class Simulation extends BasicGameState
 						t = Tile.TileType.HOME;
 					}
 				}
-				tiles[i][b] = new Tile((gc.getWidth() * 2 / 3) - 30 - (100 * (6 - i)), (gc.getHeight() / 2) - (100 * (3 - b)), 100, 100, t, i, b);
+				tiles[i][b] = new Tile(cityX + (tileW * i), cityY + (tileH * b), tileW, tileH, t, i, b);
 				if (t.equals(Tile.TileType.STREET)) { streets.add(tiles[i][b]); }
 				if (t.equals(Tile.TileType.WORKPLACE)) { workplaces.add(tiles[i][b]); }	
 				if (t.equals(Tile.TileType.HOME)) { homes.add(tiles[i][b]); }
@@ -112,7 +119,7 @@ public class Simulation extends BasicGameState
 			for (int i = 0; i < people.size(); i++) {
 				Person p = people.get((int)(Math.random() * people.size()));
 				if (w.getWorkers().size() < w.getMaxPeople()) {
-					if (!p.hasWorkplace()) {
+					if (!p.hasWorkplace() && Math.sqrt(Math.pow(p.getHome().getPosX() - w.getPosX(), 2) + Math.pow(p.getHome().getPosY() - w.getPosY(), 2)) < 10) {
 						p.addWorkplace(w);
 						w.addWorker(p);
 					}
@@ -164,7 +171,6 @@ public class Simulation extends BasicGameState
 		for (Person p : people) {
 			p.drawPerson(g);
 		}
-		
 
 		g.setColor(new Color(238, 255, 130));
 		String totalInf = "Total Number of Infections";
@@ -173,7 +179,7 @@ public class Simulation extends BasicGameState
 		g.drawLine(60, 480, 600, 480);
 		
 		for (int i = 0; i < totalInfected.size(); i ++) {
-			g.fillOval(60 + ((540 * i) / totalInfected.size()) - 3, 480 - (260 / people.size()) * totalInfected.get(i) - 3, 6, 6);
+			g.fillOval(60 + ((540 * i) / totalInfected.size()) - 3, 480 - (260 * totalInfected.get(i)) / people.size() - 3, 6, 6);
 		}
 		
 		g.setColor(new Color(255, 130, 130));
@@ -182,7 +188,7 @@ public class Simulation extends BasicGameState
 		g.drawLine(60, 505, 60, 765);
 		g.drawLine(60, 765, 600, 765);
 		for (int i = 0; i < currentlyInfected.size(); i ++) {
-			g.fillOval(60 + ((540 * i) / currentlyInfected.size()) - 3, 765 - (260 / people.size()) * currentlyInfected.get(i) - 3, 6, 6);
+			g.fillOval(60 + ((540 * i) / currentlyInfected.size()) - 3, 765 - (260 * currentlyInfected.get(i)) / people.size() - 3, 6, 6);
 		}
 		
 		g.setColor(new Color(174, 130, 255));
@@ -191,7 +197,7 @@ public class Simulation extends BasicGameState
 		g.drawLine(60, 790, 60, 1070);
 		g.drawLine(60, 1070, 600, 1070);
 		for (int i = 0; i < totalDeaths.size(); i++) {
-			g.fillOval(60 + ((540 * i) / totalDeaths.size()) - 3, 1070 - (260 / people.size()) * totalDeaths.get(i) - 3, 6, 6);
+			g.fillOval(60 + ((540 * i) / totalDeaths.size()) - 3, 1070 - (260 * totalDeaths.get(i)) / people.size() - 3, 6, 6);
 		}
 		
 	}
