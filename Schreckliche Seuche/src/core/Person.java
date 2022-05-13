@@ -68,16 +68,16 @@ public class Person {
 						y += yDif / (float)(Simulation.TICK / 4);
 					} else {
 						if (curTile.getCenterX() > x) {
-							x += 100f / (float)(Simulation.TICK / 4);
+							x += Simulation.tileW / (float)(Simulation.TICK / 4);
 						} else
 						if (curTile.getCenterX() < x) {
-							x -= 100f / (float)(Simulation.TICK / 4);
+							x -= Simulation.tileW / (float)(Simulation.TICK / 4);
 						} else
 						if (curTile.getCenterY() > y) {
-							y += 100f / (float)(Simulation.TICK / 4);
+							y += Simulation.tileH / (float)(Simulation.TICK / 4);
 						} else
 						if (curTile.getCenterY() < y) {
-							y -= 100f / (float)(Simulation.TICK / 4);
+							y -= Simulation.tileH / (float)(Simulation.TICK / 4);
 						}
 						if (Math.abs(curTile.getCenterX() - x) < 1f) {
 							x = curTile.getCenterX();
@@ -187,7 +187,9 @@ public class Person {
 			}
 		}
 		
-		
+		if (curTile.equals(workplace) && !oldTile.equals(workplace)) {
+			timeGoHome = timeGoWork + 8;
+		}
 		
 		oldTile.removePerson(this);
 		curTile.addPerson(this);
@@ -225,7 +227,8 @@ public class Person {
 		case RECOVERED:
 			g.setColor(new Color(130,0,130));
 		}
-		g.fillOval(x, y, 9, 9);
+		float circleSize = Simulation.tileX * 12 / 100;
+		g.fillOval(x - circleSize / 2, y - circleSize / 2, circleSize, circleSize);
 	}
 	
 	public void render(Graphics g) {
