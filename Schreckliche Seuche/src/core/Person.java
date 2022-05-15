@@ -89,8 +89,8 @@ public class Person {
 				}
 			}
 		} else {
-			if (y > 270) y--;
-			if (y < 270) y = 270;
+			if (y < 1000) y++;
+			if (y > 100) y = 1000;
 		}
 	}
 	
@@ -216,16 +216,16 @@ public class Person {
 			g.setColor(new Color(255,255,255));
 			break;
 		case INFECTIOUS:
-			g.setColor(new Color(235, 213, 52));
+			g.setColor(new Color(238, 255, 130));
 			break;
 		case SYMPTOMATIC:
-			g.setColor(new Color(255,0,0));
+			g.setColor(new Color(255, 130, 130));
 			break;
 		case DEAD:
-			g.setColor(new Color(0,0,0));
+			g.setColor(new Color(174, 130, 255));
 			break;
 		case RECOVERED:
-			g.setColor(new Color(130,0,130));
+			g.setColor(new Color(191, 247, 121));
 		}
 		float circleSize = Simulation.tileX * 12 / 100;
 		g.fillOval(x - circleSize / 2, y - circleSize / 2, circleSize, circleSize);
