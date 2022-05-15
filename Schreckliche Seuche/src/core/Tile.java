@@ -110,11 +110,11 @@ public class Tile {
 	
 	public void render(Graphics g) {
 		if (t.equals(TileType.HOME)) {
-			g.setColor(new Color(139, 166, 160));
+			g.setColor(new Color(66, 67, 82));
 			g.fillRect(x - w / 4, y - w / 4, w + w / 2, h + h / 2);
 		}
 		else if (t.equals(TileType.WORKPLACE)) {
-			g.setColor(new Color(139, 166, 140));
+			g.setColor(new Color(82, 66, 76));
 			g.fillRect(x - w / 4, y - w / 4, w + w / 2, h + h / 2);
 		}
 //		else {

@@ -41,7 +41,7 @@ public class Person {
 		if (status.equals(Status.INFECTIOUS) || status.equals(Status.SYMPTOMATIC)) {
 			ticksInfected++;
 		}
-		if (status.equals(Status.SYMPTOMATIC) && Math.random() < Simulation.D_PER_I / (Simulation.PERIOD - Simulation.INCUBATION) / 24) {
+		if (status.equals(Status.SYMPTOMATIC) && Math.random() < 1 - Math.pow(1 - Simulation.D_PER_I, 1 / (24 * (Simulation.PERIOD - Simulation.INCUBATION)))) {
 			status = Status.DEAD;
 			curTile.removePerson(this);
 		}
@@ -225,9 +225,9 @@ public class Person {
 			g.setColor(new Color(174, 130, 255));
 			break;
 		case RECOVERED:
-			g.setColor(new Color(191, 247, 121));
+			g.setColor(new Color(28, 186, 70));
 		}
-		float circleSize = Simulation.tileX * 12 / 100;
+		float circleSize = Simulation.tileX * (18 - 2 * Simulation.POP_DENSITY) / 100;
 		g.fillOval(x - circleSize / 2, y - circleSize / 2, circleSize, circleSize);
 	}
 	
