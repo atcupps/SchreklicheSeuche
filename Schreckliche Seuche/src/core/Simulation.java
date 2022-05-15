@@ -153,13 +153,13 @@ public class Simulation extends BasicGameState
 		g.drawString("Day " + days + " at " + (time / (TICK)) + ":00 " + "    R_naught: " + R_0 + "    Incubation time: " + INCUBATION + " days    Infection period: " + PERIOD + "    Death rate: " + D_PER_I, 30, 90);
 		g.setColor(new Color(255,255,255));
 		g.drawString("Susceptible: Not yet infected by disease", 30, 105);
-		g.setColor(new Color(235, 213, 52));
-		g.drawString("Infectious Asymptomatic: No current symptoms, spreads disease at a lower rate", 30, 120);
-		g.setColor(new Color(255,0,0));
+		g.setColor(new Color(238, 255, 130));
+		g.drawString("Infectious Asymptomatic: No current symptoms, spreads disease a  t a lower rate", 30, 120);
+		g.setColor(new Color(255, 130, 130));
 		g.drawString("Infectious Symptomatic: Clinical symptoms, spreads disease at a higher rate", 30, 135);
-		g.setColor(new Color(0,0,0));
+		g.setColor(new Color(174, 130, 255));
 		g.drawString("Dead: Killed by disease", 30, 150);
-		g.setColor(new Color(130,0,130));
+		g.setColor(new Color(191, 247, 121));
 		g.drawString("Recovered: Survived disease infection, cannot be reinfected", 30, 165);
 		
 		
