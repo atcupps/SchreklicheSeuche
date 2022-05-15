@@ -33,8 +33,14 @@ public class Settings extends BasicGameState
 	Slider popDensity;
 	Slider rNaught;
 	Slider time;
+	Slider death;
+	Slider sickness;
+	Slider size;
+	Slider workplace;
+	Slider incubation;
 	
-	public static float rNaughtF, popDensityF, timeF;
+	
+	public static float rNaughtF, popDensityF, timeF, deathF, sicknessF, sizeF, workplaceF, incubationF;
 	
 	
 	public ArrayList<Slider> sliders;
@@ -58,7 +64,7 @@ public class Settings extends BasicGameState
 		hello = new Image("res/launchButton.png");
 		hello.setFilter(Image.FILTER_NEAREST);
 		
-		background = new Image("res/settingBackgroundNEW.png");
+		background = new Image("res/SettingPage3.png");
 		background.setFilter(Image.FILTER_NEAREST);
 		
 		button = new Button(50f,50f,200f,100f, hello);
@@ -67,23 +73,43 @@ public class Settings extends BasicGameState
 		sliderBack = new Image("res/slider.png");
 		sliderBack.setFilter(Image.FILTER_NEAREST);
 		
-		sliderClick = new Image("res/launchButton.png");
+		sliderClick = new Image("res/blue.png");
 		sliderClick.setFilter(Image.FILTER_NEAREST);
 		
-		popDensity = new Slider(150f,900f,400f,15f, sliderClick, sliderBack, 6);
+		popDensity = new Slider(75f,475f,700f,15f, sliderClick, sliderBack, 6);
 		
-		rNaught = new Slider(1150f,800f,700f,15f, sliderClick, sliderBack, 53);
+		rNaught = new Slider(1150f,725f,700f,15f, sliderClick, sliderBack, 50);
 		
-		time = new Slider(600f, 600f, 700f, 15f, sliderClick, sliderBack, 43);
+		time = new Slider(1150f, 475f, 700f, 15f, sliderClick, sliderBack, 41);
+		
+		death = new Slider(1150f,900f,700f,15f, sliderClick, sliderBack, 100);
+		
+		size = new Slider(75f, 325f, 700f, 15f, sliderClick, sliderBack, 20);
+		
+		sickness = new Slider(1150f, 325f, 700f, 15f, sliderClick, sliderBack, 28);
+		
+		workplace = new Slider(75f, 675f, 700f, 15f, sliderClick, sliderBack, 30);
+		
+		incubation = new Slider(75f, 900f, 700f, 15f, sliderClick, sliderBack, 10);
 		
 		buttons.add(button);
 		sliders.add(popDensity);
 		sliders.add(rNaught);
 		sliders.add(time);
+		sliders.add(death);
+		sliders.add(sickness);
+		sliders.add(size);
+		sliders.add(workplace);
+		sliders.add(incubation);
 		
 		popDensityF = 3;
 		rNaughtF = 0;
-		timeF = 5;
+		timeF = 7;
+		deathF = 0;
+		sizeF = 0;
+		incubationF = 0;
+		workplaceF = 0;
+		
 		
 	}
 
@@ -106,9 +132,15 @@ public class Settings extends BasicGameState
 			sbg.enterState(2);
 		}
 		g.setColor(new Color(0,0,0));
-		g.drawString("" + popDensityF, 175, 950);
-		g.drawString("" + rNaughtF, 1175, 950);
-		g.drawString("" + timeF, 650, 650);
+		g.drawString("" + popDensityF, 175, 500);
+		g.drawString("" + rNaughtF, 1175, 750);
+		g.drawString("" + timeF, 1175, 500);
+		g.drawString("" + deathF, 1175, 925);
+		g.drawString("" + sicknessF, 1175, 350);
+		g.drawString("" + sizeF, 100, 350);
+		g.drawString("" + workplaceF, 100, 700);
+		g.drawString("" + incubationF, 100, 925);
+	
 	}
 	
 
@@ -124,7 +156,13 @@ public class Settings extends BasicGameState
 		
 		popDensityF = popDensity.categorySelected();
 		rNaughtF = rNaught.categorySelected()/5;
-		timeF = time.categorySelected() + 5;
+		timeF = time.categorySelected() + 7;
+		deathF = death.categorySelected();
+		sicknessF = sickness.categorySelected() + 2;
+		sizeF = size.categorySelected() * 50;
+		workplaceF = workplace.categorySelected();
+		incubationF = incubation.categorySelected();
+		
 	}
 
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException 
