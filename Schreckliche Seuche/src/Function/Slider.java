@@ -1,4 +1,4 @@
-package Function;
+package function;
 
 import java.util.ArrayList;
 
@@ -71,7 +71,7 @@ public class Slider
 	{
 		g.setBackground(new Color(0,50,0));
 		back.draw(x, y, width, height);
-		button.draw(x + altX, y - height, width/8, height*3);
+		button.draw(x + altX, y - height, width/categories, height*3);
 		
 		
 //		g.drawString(Mouse.getY() + "", 50, 50);
@@ -95,12 +95,12 @@ public class Slider
 			
 			for (int i = 0; i < categories; i++) {
 				if (x + altX > x + split*i && x + altX < x + split*(i+1)) {
-					jumpSpot = split*i + width/16;
+					jumpSpot = split*i + (width/categories)/2;
 					chosen = i+1;
 				}
 			}
 			
-			altX = jumpSpot - width/16;
+			altX = jumpSpot - (width/categories)/2;
 			
 		}
 		
@@ -108,7 +108,7 @@ public class Slider
 		{
 
 			
-			if (Mouse.getX() > x + altX - width/16 && Mouse.getX() < (x + altX) + width && (gc.getHeight()-Mouse.getY()) > y - (height*1.5) && (gc.getHeight()-Mouse.getY()) < y + (height*1.5)) {
+			if (Mouse.getX() > x + altX - (width/categories)/2 && Mouse.getX() < (x + altX) + width/categories && (gc.getHeight()-Mouse.getY()) > y - (height*1.5) && (gc.getHeight()-Mouse.getY()) < y + (height*1.5)) {
 					pressed = true; 
 			}
 		    
@@ -130,8 +130,8 @@ public class Slider
 		
 		
 		
-		if (pressed && Mouse.getX() >= x  && Mouse.getX() <= x + width) {
-			altX = Math.abs(x-Mouse.getX()) - width/16;
+		if (pressed && Mouse.getX() >= x - (width/categories)  && Mouse.getX() <= x + width) {
+			altX = Math.abs(x-Mouse.getX()) - (width/categories)/2;
 
 		}
 		
