@@ -11,8 +11,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import Function.Button;
-import Function.Slider;
+import function.Button;
+import function.Slider;
 
 
 public class Intro extends BasicGameState 
@@ -23,22 +23,21 @@ public class Intro extends BasicGameState
 	int id;
 	
 	Image hello = null;
-	Image slider1 = null;
-	
+
+	Image background = null;
 
 	
 	Button button;
-	Slider slider;
-	Slider slider2;
+
 	
 	public ArrayList<Button> buttons;
-	public ArrayList<Slider> sliders;
+	
 	
 	Intro(int id) 
 	{
 		this.id = id;
 		buttons = new ArrayList<Button>();
-		sliders = new ArrayList<Slider>();
+		
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException 
@@ -46,30 +45,29 @@ public class Intro extends BasicGameState
 		// This code happens when you enter a game state for the *first time.*
 		gc.setShowFPS(true);
 		
-		hello = new Image("res/Enter.png");
+		background = new Image("res/IntroScreenNEW.png");
+		background.setFilter(Image.FILTER_NEAREST);
+		
+		hello = new Image("res/New Piskel.png");
 		hello.setFilter(Image.FILTER_NEAREST);
 		
-		slider1 = new Image("res/rectangle.png");
-		slider1.setFilter(Image.FILTER_NEAREST);
 		
-		slider = new Slider(700f,600f,100f,15f, hello, slider1, 15);
-		slider2 = new Slider(200f,500f,300f,20f, hello, slider1, 50);
+		
+	
 		button = new Button(400f,200f,400f,200f, hello);
 		
-		sliders.add(slider);
-		sliders.add(slider2);
 		buttons.add(button);
 	}
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException 
 	{
+		background.draw(0,0,gc.getWidth(),gc.getHeight());
+		
 		for(Button b : buttons) {
 			b.render(gc, g);
 		}
 		
-		for(Slider b : sliders) {
-			b.render(gc, g);
-		}
+		
 		
 		g.setColor(new Color(200,200,200));
 		
@@ -87,9 +85,7 @@ public class Intro extends BasicGameState
 		for(Button b : buttons) {
 			b.update(gc);
 		}
-		for(Slider b : sliders) {
-			b.update(gc);
-		}
+		
 	}
 
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException 
